@@ -1,5 +1,6 @@
 package com.ajaz.hotelservice.hotelservice.services;
 
+import com.ajaz.hotelservice.hotelservice.dtos.HotelDto;
 import com.ajaz.hotelservice.hotelservice.exceptions.HotelNotFoundException;
 import com.ajaz.hotelservice.hotelservice.models.Hotel;
 import com.ajaz.hotelservice.hotelservice.repositories.HotelRepository;
@@ -38,5 +39,20 @@ public class HotelServiceImpl implements HotelService{
     @Override
     public List<Hotel> getAllHotels() {
         return hotelRepository.findAll();
+    }
+
+    @Override
+    public Hotel updateHotelById(Long id, HotelDto hotelDto) throws HotelNotFoundException {
+        Optional<Hotel> hotelOptional = hotelRepository.findById(id);
+        if(hotelOptional.isEmpty()){
+            throw new HotelNotFoundException("Hotel trying to update with id: " + id + " does not exist");
+        }
+
+        Hotel existingHotel = hotelOptional.get();
+        existingHotel.setName(hotelDto.getName());
+        existingHotel.setAddress(hotelDto.getAddress());
+        existingHotel.setAbout(hotelDto.getAbout());
+
+        return hotelRepository.save(existingHotel);
     }
 }

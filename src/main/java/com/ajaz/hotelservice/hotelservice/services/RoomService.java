@@ -76,4 +76,20 @@ public class RoomService {
         return response;
 
     }
+
+    public Room updateRoomById(Long id, RoomDto roomDto) throws RoomNotFoundException {
+        Optional<Room> roomOptional = roomRepository.findById(id);
+        if(roomOptional.isEmpty()){
+            throw new RoomNotFoundException("Room trying to update with id: " + id + " does not exist");
+        }
+
+        Room existingRoom = roomOptional.get();
+        existingRoom.setRoomNumber(roomDto.getRoomNumber());
+        existingRoom.setFloorNumber(roomDto.getFloorNumber());
+        existingRoom.setRoomType(roomDto.getRoomType());
+        existingRoom.setRoomStatus(roomDto.getRoomStatus());
+        existingRoom.setPrice(roomDto.getPrice());
+
+        return roomRepository.save(existingRoom);
+    }
 }

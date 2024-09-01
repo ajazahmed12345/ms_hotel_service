@@ -40,4 +40,12 @@ public class RoomController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RoomDto> updateRoomById(@PathVariable("id") Long id, @RequestBody RoomDto roomDto) throws RoomNotFoundException {
+        Room updatedRoom = roomService.updateRoomById(id, roomDto);
+        RoomDto response = RoomDto.from(updatedRoom);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

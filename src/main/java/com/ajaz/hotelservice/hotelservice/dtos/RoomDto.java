@@ -20,10 +20,8 @@ public class RoomDto {
     private Long floorNumber;
     private String hotelName;
 
-    @Enumerated(EnumType.ORDINAL)
     private RoomType roomType;
 
-    @Enumerated(EnumType.ORDINAL)
     private RoomStatus roomStatus;
 
     private Long price;

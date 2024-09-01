@@ -1,6 +1,7 @@
 package com.ajaz.hotelservice.hotelservice.controllers;
 
 import com.ajaz.hotelservice.hotelservice.dtos.HotelDto;
+import com.ajaz.hotelservice.hotelservice.dtos.RoomDto;
 import com.ajaz.hotelservice.hotelservice.exceptions.HotelNotFoundException;
 import com.ajaz.hotelservice.hotelservice.models.Hotel;
 import com.ajaz.hotelservice.hotelservice.services.HotelService;
@@ -40,4 +41,14 @@ public class HotelController {
 
         return hotels.stream().map(hotel -> HotelDto.from(hotel)).collect(Collectors.toList());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HotelDto> updateHotelById(@PathVariable("id") Long id, @RequestBody HotelDto hotelDto) throws HotelNotFoundException {
+        Hotel updatedHotel = hotelService.updateHotelById(id, hotelDto);
+        HotelDto response = HotelDto.from(updatedHotel);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }
