@@ -50,5 +50,8 @@ public class HotelController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteHotelById(@PathVariable("id") Long id) throws HotelNotFoundException {
+        return new ResponseEntity<>(hotelService.deleteHotelById(id), HttpStatus.OK);
+    }
 }

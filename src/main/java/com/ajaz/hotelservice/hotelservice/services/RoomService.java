@@ -92,4 +92,15 @@ public class RoomService {
 
         return roomRepository.save(existingRoom);
     }
+
+    public String deleteRoomById(Long id) throws RoomNotFoundException {
+        Optional<Room> roomOptional = roomRepository.findById(id);
+        if(roomOptional.isEmpty()){
+            throw new RoomNotFoundException("Room trying to delete with id: " + id + " does not exist");
+        }
+
+        roomRepository.deleteById(id);
+
+        return "Room from Hotel " + roomOptional.get().getHotelName() + " and with id: " + id + " has been deleted successfully.";
+    }
 }

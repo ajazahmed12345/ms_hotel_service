@@ -48,4 +48,9 @@ public class RoomController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteRoomById(@PathVariable("id") Long id) throws RoomNotFoundException {
+        return new ResponseEntity<>(roomService.deleteRoomById(id), HttpStatus.OK);
+    }
 }
