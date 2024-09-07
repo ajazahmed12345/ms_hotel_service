@@ -7,19 +7,39 @@ import com.ajaz.hotelservice.hotelservice.exceptions.RoomNotFoundException;
 import com.ajaz.hotelservice.hotelservice.models.*;
 import com.ajaz.hotelservice.hotelservice.repositories.HotelRepository;
 import com.ajaz.hotelservice.hotelservice.repositories.RoomRepository;
+import com.ajaz.hotelservice.hotelservice.utilities.EmailUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
     private RoomRepository roomRepository;
     private HotelRepository hotelRepository;
-    public RoomService(RoomRepository roomRepository, HotelRepository hotelRepository){
+    private EmailUtil emailUtil;
+
+    @Value("${email.app.passkey}")
+    private String emailAppPasskey;
+
+    @Value("${email.from}")
+    private String emailFrom;
+
+    @Value("${email.to}")
+    private String emailTo;
+
+
+
+    public RoomService(RoomRepository roomRepository, HotelRepository hotelRepository, EmailUtil emailUtil){
         this.roomRepository = roomRepository;
         this.hotelRepository = hotelRepository;
+        this.emailUtil = emailUtil;
     }
 
     public Room createRoom(Room room){
@@ -65,6 +85,22 @@ public class RoomService {
         minPricedRoom.setRoomStatus(RoomStatus.BOOKED);
         roomRepository.save(minPricedRoom);
 
+        // send the email to ajaz.dtici786@gmail.com to notify about the room booking
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); //SMTP Host
+        props.put("mail.smtp.port", "587"); //TLS Port
+        props.put("mail.smtp.auth", "true"); //enable authentication
+        props.put("mail.smtp.starttls.enable", "true"); //enable STARTTLS
+
+        //create Authenticator object to pass in Session.getInstance argument
+        Authenticator auth = new Authenticator() {
+            //override the getPasswordAuthentication method
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(emailFrom, emailAppPasskey);
+            }
+        };
+        Session session = Session.getInstance(props, auth);
+
         Long changeMoney = budget - minPricedRoom.getPrice();
 
         ApiResponse response = ApiResponse.builder()
@@ -72,6 +108,8 @@ public class RoomService {
                 .status(ApiStatus.SUCCESS)
                 .roomDto(RoomDto.from(minPricedRoom))
                 .build();
+
+        emailUtil.sendEmail(session, emailTo, "Testing subject for mail service", response.toString());
 
         return response;
 

@@ -1,17 +1,17 @@
 package com.ajaz.hotelservice.hotelservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "rooms")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

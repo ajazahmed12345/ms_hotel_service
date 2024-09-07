@@ -13,4 +13,5 @@ import org.springframework.http.HttpStatus;
 public class ExceptionDto {
     private String message;
     private HttpStatus status;
+
 }

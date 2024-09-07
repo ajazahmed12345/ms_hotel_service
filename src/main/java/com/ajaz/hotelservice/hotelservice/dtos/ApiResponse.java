@@ -7,8 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class ApiResponse {
     private String message;
     private ApiStatus status;
     private RoomDto roomDto;
+
 }

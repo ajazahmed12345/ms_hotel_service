@@ -71,11 +71,11 @@ public class HotelServiceImpl implements HotelService{
         List<Room> associatedRooms = hotelOptional.get().getRooms();
         List<Long> deleteRoomIds = associatedRooms.stream().map(room -> room.getId()).collect(Collectors.toList());
 
-        for (Long roomId : deleteRoomIds){
-            System.out.println(roomId);
-        }
+//        for (Long roomId : deleteRoomIds){
+//            System.out.println(roomId);
+//        }
 
-        roomRepository.deleteAll(associatedRooms);
+        roomRepository.deleteAllById(deleteRoomIds);
 
         hotelRepository.deleteById(id);
 
